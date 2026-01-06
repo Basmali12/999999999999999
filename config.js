@@ -2,27 +2,23 @@
 // === إعدادات المتجر (قم بتعديل البيانات هنا لكل زبون) ===
 
 window.MY_STORE_CONFIG = {
-    // 1. ضع كود فيربايس هنا (نسخ ولصق من موقع فيربايس)
-    firebase: {
-        apiKey: "AIzaSyDX0esBRiQ4MuyvWH_s2UZ2kJpA9GryDgE",
-        authDomain: "tttttt-48c2e.firebaseapp.com",
-        databaseURL: "https://tttttt-48c2e-default-rtdb.firebaseio.com",
-        projectId: "tttttt-48c2e",
-        storageBucket: "tttttt-48c2e.firebasestorage.app",
-        messagingSenderId: "982883301644",
-        appId: "1:982883301644:web:7b1676215cb4f0fe7c7129",
-        measurementId: "G-QLCYC16T20"
-    },
+  firebase: {
+    apiKey: "AIzaSyBwzzJqPNa08mPBZNMuvExxCJzkToV65rE",
+    authDomain: "project-4623091190980149681.firebaseapp.com",
+    databaseURL: "https://project-4623091190980149681-default-rtdb.firebaseio.com",
+    projectId: "project-4623091190980149681",
+    storageBucket: "project-4623091190980149681.firebasestorage.app",
+    messagingSenderId: "252053182084",
+    appId: "1:252053182084:web:b35a5e3c7d6777e79a94d1",
+    measurementId: "G-H7JJBWJGQR"
+  },
 
-    // 2. ضع إعدادات الصور (Cloudinary) هنا
-    cloudinary: {
-        cloudName: "dongmlmoj",  // اسم الكلاود
-        uploadPreset: "app_upload" // اسم البريسيت (تأكد من إنشائه في حساب الزبون)
-    },
+  cloudinary: {
+    cloudName: "dongmlmoj",
+    uploadPreset: "app_upload"
+  },
 
-    // 3. رمز دخول الأدمن
-    security: {
-        adminCode: "1001"
-    }
+  security: {
+    adminCode: "1001"
+  }
 };
-
