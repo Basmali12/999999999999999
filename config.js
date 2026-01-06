@@ -15,12 +15,11 @@ const firebaseConfig = {
   appId: "1:252053182084:web:b35a5e3c7d6777e79a94d1",
   measurementId: "G-H7JJBWJGQR"
 };
-    },
-
+    
     // 2. ضع إعدادات الصور (Cloudinary) هنا
     cloudinary: {
-        cloudName: "",  // اسم الكلاود
-        uploadPreset: "" // اسم البريسيت (تأكد من إنشائه في حساب الزبون)
+        cloudName: "dongmlmoj",  // اسم الكلاود
+        uploadPreset: "app_upload" // اسم البريسيت (تأكد من إنشائه في حساب الزبون)
     },
 
     // 3. رمز دخول الأدمن
