@@ -1,4 +1,13 @@
-// script.js
+// --- بداية التعديل: تسجيل Service Worker (ضروري لظهور التثبيت) ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('Service Worker registered!', reg))
+      .catch(err => console.log('Service Worker registration failed', err));
+  });
+}
+// --- نهاية التعديل ---
+
 const config = window.MY_STORE_CONFIG;
 if (!config) { alert("خطأ: لم يتم العثور على ملف الإعدادات config.js!"); }
 
@@ -64,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!localStorage.getItem('visited')) { showPage('login-page'); localStorage.setItem('visited', 'true'); }
     }, 2000);
 
+    // كود التثبيت موجود هنا وهو صحيح، لكنه كان يحتاج لتسجيل السيرفس وركر في الأعلى ليعمل
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-banner').style.display = 'flex'; });
     document.getElementById('install-btn').addEventListener('click', async () => { if(deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; document.getElementById('install-banner').style.display = 'none'; } });
     document.getElementById('close-install').addEventListener('click', () => document.getElementById('install-banner').style.display = 'none');
@@ -150,3 +160,4 @@ window.filterProducts = function(cat) {
     event.currentTarget.querySelector('.cat-box').classList.add('active');
     cards.forEach(card => { if(cat === 'all' || card.dataset.category === cat) card.style.display = 'flex'; else card.style.display = 'none'; });
 }
+
