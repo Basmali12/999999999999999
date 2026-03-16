@@ -41,7 +41,14 @@
 
     <div id="product-page" class="page">
         <div class="product-header"><button class="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></button><span class="header-title">تفاصيل المنتج</span></div>
-        <div class="product-view-scroll"><div class="large-image-container"><img id="detail-img" src=""></div><div class="detail-content"><h2 id="detail-title"></h2><div class="detail-price" id="detail-price"></div><div class="detail-desc"><p></p></div></div></div>
+        <div class="product-view-scroll">
+            <div class="large-image-container"><img id="detail-img" src=""></div>
+            <div class="detail-content">
+                <div id="detail-dynamic-buttons" style="margin-bottom: 20px;"></div>
+                <h2 id="detail-title"></h2>
+                <div class="detail-desc"><p></p></div>
+            </div>
+        </div>
     </div>
 
     <script src="config.js"></script>
