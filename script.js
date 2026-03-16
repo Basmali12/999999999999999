@@ -1,144 +1,88 @@
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('Service Worker registered!', reg))
-      .catch(err => console.log('Service Worker registration failed', err));
-  });
+/* style.css */
+:root {
+    --primary: #ff9900;
+    --dark: #1a1a1a;
+    --light: #fffbf5;
+    --white: #ffffff;
+    --grey: #f4f4f4;
+    --text: #333;
+    --radius: 16px;
+    --shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-const config = window.MY_STORE_CONFIG;
-if (!config) { alert("خطأ: لم يتم العثور على ملف الإعدادات config.js!"); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: var(--light); color: var(--text); overflow-x: hidden; padding-bottom: 80px; }
 
-let allProducts = {};
-let cart = [];
-let user = null;
-let deferredPrompt;
-let adminPhoneNumber = ""; 
-let sliderInterval;
-
-firebase.initializeApp(config.firebase);
-const db = firebase.database();
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    db.ref('settings').on('value', snapshot => {
-        const s = snapshot.val();
-        if(s) {
-            if(s.storeName) {
-                const formattedName = `<span class="store-text" style="color:#fff">${s.storeName.charAt(0)}</span>${s.storeName.substring(1)}`;
-                const headerDisplay = document.getElementById('store-name-display');
-                if(headerDisplay) headerDisplay.innerHTML = formattedName;
-                const splashTitle = document.getElementById('splash-title');
-                if(splashTitle) splashTitle.innerText = s.storeName;
-            }
-            if(s.whatsapp) adminPhoneNumber = s.whatsapp;
-        }
-    });
-
-    db.ref('categories').on('value', snapshot => {
-        const catContainer = document.getElementById('dynamic-categories');
-        const data = snapshot.val();
-        catContainer.innerHTML = `<div class="category-item" onclick="filterProducts('all')"><div class="cat-box active"><div class="square-icon"></div></div><span class="cat-name">الكل</span></div>`;
-        if(data) {
-            Object.values(data).forEach(cat => {
-                catContainer.innerHTML += `<div class="category-item" onclick="filterProducts('${cat.id}')"><div class="cat-box"><img src="${cat.image}" class="cat-img"></div><span class="cat-name">${cat.name}</span></div>`;
-            });
-        }
-    });
-
-    db.ref('banners').on('value', snapshot => {
-        const slider = document.getElementById('dynamic-slider');
-        const data = snapshot.val();
-        slider.innerHTML = "";
-        if(sliderInterval) clearInterval(sliderInterval);
-        if(data) {
-            const banners = Object.values(data);
-            banners.forEach(b => { slider.innerHTML += `<img src="${b.image}" alt="${b.title || 'Offer'}">`; });
-            let currentIndex = 0;
-            const totalSlides = banners.length;
-            if(totalSlides > 1) {
-                sliderInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % totalSlides;
-                    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-                }, 3000);
-            }
-        } else { slider.innerHTML = '<img src="https://via.placeholder.com/800x450?text=Welcome" style="width:100%; height:100%; object-fit:cover">'; }
-    });
-
-    setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        splash.style.opacity = '0';
-        setTimeout(() => splash.style.display = 'none', 500);
-        if(!localStorage.getItem('visited')) { showPage('login-page'); localStorage.setItem('visited', 'true'); }
-    }, 2000);
-
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-banner').style.display = 'flex'; });
-    document.getElementById('install-btn').addEventListener('click', async () => { if(deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; document.getElementById('install-banner').style.display = 'none'; } });
-    document.getElementById('close-install').addEventListener('click', () => document.getElementById('install-banner').style.display = 'none');
-    
-    db.ref('products').on('value', (snapshot) => {
-        const container = document.getElementById('products-container');
-        container.innerHTML = "";
-        const data = snapshot.val();
-        if (!data) { container.innerHTML = "<p style='width:200%; text-align:center;'>لا توجد منتجات</p>"; return; }
-        allProducts = data;
-        const productsKeys = Object.keys(data).reverse();
-        productsKeys.forEach(key => {
-             const prod = data[key];
-             const card = `<div class="product-card" data-category="${prod.category || 'general'}"><span class="discount-badge">جديد</span><img src="${prod.image}" class="prod-img" loading="lazy"><div class="prod-details"><div class="prod-title">${prod.title}</div><button class="details-btn" onclick="openProductPage('${key}')">تفاصيل</button></div></div>`;
-            container.innerHTML += card;
-        });
-    });
-});
-
-window.showPage = function(pageId) {
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
-    if(document.getElementById(pageId)) document.getElementById(pageId).classList.add('active-page');
-    window.scrollTo(0,0);
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    if(pageId === 'home-page') document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+.animated-store-name {
+    flex-grow: 1; text-align: center; font-size: 18px; font-weight: 800;
+    white-space: nowrap; overflow: hidden; position: relative; color: #222;
+    animation: pulseName 2s infinite;
 }
-window.goBack = function() { showPage('home-page'); }
+@keyframes pulseName { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-window.openProductPage = function(id) {
-    const prod = allProducts[id];
-    if(!prod) return;
-    document.getElementById('detail-title').innerText = prod.title || "";
-    document.getElementById('detail-img').src = prod.image || "";
-    document.querySelector('.detail-desc p').innerHTML = prod.description ? prod.description.replace(/\n/g, "<br>") : "لا يوجد وصف";
-    
-    const btnsContainer = document.getElementById('detail-dynamic-buttons');
-    btnsContainer.innerHTML = '';
-    if(prod.buttons && prod.buttons.length > 0) {
-        prod.buttons.forEach(b => {
-            btnsContainer.innerHTML += `<a href="${b.url}" class="dynamic-link-btn" target="_blank">${b.name}</a>`;
-        });
-    }
-    showPage('product-page');
-}
+.install-banner { position: fixed; top: 0; left: 0; width: 100%; background: #222; color: #fff; padding: 10px 15px; z-index: 9999; display: none; align-items: center; justify-content: space-between; }
+#install-btn { background: var(--primary); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
+#close-install { background: none; border: none; color: #ccc; cursor: pointer; }
 
-window.addToCartFromDetail = function() {
-    // تم الإبقاء على الوظيفة تجنباً للحذف كما طُلب
-}
-window.addToCart = function(title, price, img) { cart.push({ title, price, img }); updateCartUI(); showToast("تمت الإضافة للسلة!"); }
-function updateCartUI() {
-    // تم الإبقاء على الوظيفة
-}
-window.removeFromCart = function(index) { cart.splice(index, 1); updateCartUI(); }
-window.clearCart = function() { cart = []; updateCartUI(); }
+#splash-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9000; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s; }
+.loader { width: 40px; height: 40px; border: 4px solid #fff; border-top-color: #222; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto 0; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
-window.processCheckout = function() {
-    // تم الإبقاء على الوظيفة
-}
+.page { display: none; animation: fadeIn 0.3s; min-height: 100vh; background: var(--light); }
+.active-page { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-window.handleGoogleLogin = function() { showToast("جاري الاتصال..."); setTimeout(() => { user = { name: "مستخدم", email: "user@gmail.com", avatar: "https://via.placeholder.com/80" }; updateProfileUI(); showPage('home-page'); }, 1500); }
-function updateProfileUI() { if(user) { document.getElementById('profile-name').innerText = user.name; document.getElementById('profile-email').innerText = user.email; document.getElementById('profile-img').src = user.avatar; } }
-window.openWhatsAppSupport = function() { if (adminPhoneNumber) window.open(`https://wa.me/${adminPhoneNumber}`, '_blank'); else showToast("رقم الخدمة غير متوفر"); }
-function showToast(msg) { const toast = document.getElementById('toast-notification'); toast.innerText = msg; toast.classList.add('show-toast'); setTimeout(() => toast.classList.remove('show-toast'), 2000); }
-window.toggleSidebar = function() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebar-overlay').classList.toggle('active'); }
-window.filterProducts = function(cat) {
-    const cards = document.querySelectorAll('.product-card');
-    document.querySelectorAll('.cat-box').forEach(b => b.classList.remove('active'));
-    event.currentTarget.querySelector('.cat-box').classList.add('active');
-    cards.forEach(card => { if(cat === 'all' || card.dataset.category === cat) card.style.display = 'flex'; else card.style.display = 'none'; });
+.sticky-header { position: sticky; top: 0; z-index: 100; background: var(--primary); padding: 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: var(--shadow); }
+.top-nav { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+
+.search-container { background: var(--white); border-radius: 15px; padding: 5px 15px; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.search-box { width: 100%; display: flex; align-items: center; }
+.search-box input { width: 100%; border: none; background: transparent; padding: 10px; outline: none; color: var(--text); }
+.search-box i { color: #aaa; margin-left: 10px; }
+
+.slider-container { margin: 15px; border-radius: 15px; overflow: hidden; position: relative; height: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); direction: ltr; }
+.slider-wrapper { display: flex; height: 100%; width: 100%; transition: transform 0.5s ease-in-out; }
+.slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+.promo-text { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 15px; font-size: 12px; }
+
+.section-title { padding: 10px 15px; font-weight: bold; font-size: 16px; margin-top: 10px; }
+.categories-scroll { display: flex; overflow-x: auto; padding: 10px 15px; gap: 15px; scrollbar-width: none; }
+.cat-box { width: 70px; height: 70px; border-radius: 18px; background: var(--white); display: flex; align-items: center; justify-content: center; border: 2px solid transparent; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.cat-box.active { border-color: var(--primary); }
+.cat-img { width: 100%; height: 100%; object-fit: cover; }
+.cat-name { font-size: 11px; text-align: center; display: block; margin-top: 5px; font-weight: 600; }
+.square-icon { width: 20px; height: 20px; background: var(--primary); border-radius: 4px; }
+
+.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
+.product-card { background: var(--white); border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.prod-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.prod-details { padding: 10px; }
+
+.prod-title { font-size: 12px; font-weight: bold; margin-bottom: 5px; white-space: normal !important; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4; height: 34px; }
+.discount-badge { position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+
+.details-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 6px; border-radius: 8px; margin-top: 5px; cursor: pointer; font-weight: bold; font-size: 13px; }
+.dynamic-link-btn { display: block; width: 100%; background: #27ae60; color: white; text-align: center; padding: 12px; margin-bottom: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 900; }
+.nav-item { text-align: center; color: #aaa; font-size: 10px; cursor: pointer; }
+.nav-item.active { color: var(--primary); }
+.nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+.product-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.header-title { font-weight: bold; font-size: 16px; }
+.back-btn { background: none; border: none; font-size: 18px; cursor: pointer; }
+
+.large-image-container { height: 300px; display: flex; align-items: center; justify-content: center; background: #fff; width: 100%; }
+.large-image-container img { width: 100%; height: 100%; max-width: 100%; object-fit: contain; }
+.detail-content { padding: 20px; background: var(--white); border-top-left-radius: 30px; border-top-right-radius: 30px; margin-top: -20px; position: relative; min-height: 300px; padding-bottom: 80px; }
+.detail-desc { margin-top: 20px; line-height: 1.6; color: #666; font-size: 14px; white-space: pre-line; }
+
+#toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 12px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 2000; }
+.show-toast { opacity: 1 !important; top: 60px !important; }
+
+@media (min-width: 768px) {
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .large-image-container { height: 450px; }
+    .slider-container { height: 300px; }
 }
