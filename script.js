@@ -119,11 +119,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const productsKeys = Object.keys(data).reverse();
         productsKeys.forEach(key => {
              const prod = data[key];
-             const card = `<div class="product-card" data-category="${prod.category || 'general'}"><span class="discount-badge">جديد</span><img src="${prod.image}" class="prod-img" loading="lazy"><div class="prod-details"><div class="prod-title">${prod.title}</div><button class="details-btn" onclick="openProductPage('${key}')">تفاصيل</button></div></div>`;
+             const card = `<div class="product-card" data-category="${prod.category || 'general'}" id="card-${key}"><span class="discount-badge">جديد</span><div class="img-wrapper"><img src="${prod.image}" class="prod-img" loading="lazy"></div><div class="prod-details"><div class="prod-title">${prod.title}</div><button class="details-btn" onclick="animateCardAndOpen(event, '${key}', 'card-${key}')">تفاصيل</button></div></div>`;
             container.innerHTML += card;
         });
     });
 });
+
+window.animateCardAndOpen = function(event, id, cardId) {
+    const card = document.getElementById(cardId);
+    if(!card) return;
+    
+    let tl = gsap.timeline({
+        onComplete: () => {
+            openProductPage(id);
+        }
+    });
+    
+    tl.to(card, { duration: 0.5, rotationY: 180, scale: 0.8, ease: "power2.inOut" })
+      .to(card, { duration: 0.5, rotationY: 360, scale: 1.1, ease: "power2.inOut" })
+      .to(card, { duration: 0.3, scale: 1, ease: "bounce.out" });
+}
 
 window.showPage = function(pageId) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
