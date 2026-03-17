@@ -119,10 +119,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const productsKeys = Object.keys(data).reverse();
         productsKeys.forEach(key => {
              const prod = data[key];
-             const card = `<div class="product-card" data-category="${prod.category || 'general'}" id="card-${key}"><span class="discount-badge">جديد</span><div class="img-wrapper"><img src="${prod.image}" class="prod-img" loading="lazy"></div><div class="prod-details"><div class="prod-title">${prod.title}</div><button class="details-btn" onclick="animateCardAndOpen(event, '${key}', 'card-${key}')">تفاصيل</button></div></div>`;
+             const card = `<div class="product-card" data-category="${prod.category || 'general'}" id="card-${key}"><span class="discount-badge">جديد</span><div class="img-wrapper"><img src="${prod.image}" class="prod-img" loading="lazy" onclick="animateCardAndOpen(event, '${key}', 'card-${key}')"></div><div class="prod-details"><div class="prod-title">${prod.title}</div><button class="details-btn" onclick="animateCardAndOpen(event, '${key}', 'card-${key}')">تفاصيل</button></div></div>`;
             container.innerHTML += card;
         });
     });
+
+    const searchInput = document.getElementById('search-input');
+    if(searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const title = card.querySelector('.prod-title').innerText.toLowerCase();
+                if(title.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
 });
 
 window.animateCardAndOpen = function(event, id, cardId) {
@@ -171,11 +187,29 @@ window.openProductPage = function(id) {
         btnsContainer.innerHTML = '';
         if(prod.buttons && prod.buttons.length > 0) {
             prod.buttons.forEach(b => {
-                btnsContainer.innerHTML += `<a href="${b.url}" class="dynamic-link-btn" target="_blank">${b.name}</a>`;
+                btnsContainer.innerHTML += `<button onclick="openIframe('${b.url}')" class="dynamic-link-btn">${b.name}</button>`;
             });
         }
     }
     showPage('product-page');
+}
+
+window.openIframe = function(url) {
+    const modal = document.getElementById('iframe-modal');
+    const iframe = document.getElementById('internal-iframe');
+    if(modal && iframe) {
+        iframe.src = url;
+        modal.style.display = 'flex';
+    }
+}
+
+window.closeIframe = function() {
+    const modal = document.getElementById('iframe-modal');
+    const iframe = document.getElementById('internal-iframe');
+    if(modal && iframe) {
+        iframe.src = "";
+        modal.style.display = 'none';
+    }
 }
 
 window.addToCartFromDetail = function() {
