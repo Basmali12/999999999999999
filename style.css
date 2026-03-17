@@ -22,6 +22,18 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 }
 @keyframes pulseName { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
+/* أيقونة الواتساب في الهيدر */
+.wa-header-icon {
+    color: #25D366;
+    font-size: 26px;
+    margin-right: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+.wa-header-icon:active { transform: scale(0.9); }
+
 /* === 3. بانر التثبيت (PWA) === */
 .install-banner { position: fixed; top: 0; left: 0; width: 100%; background: #222; color: #fff; padding: 10px 15px; z-index: 9999; display: none; align-items: center; justify-content: space-between; }
 #install-btn { background: var(--primary); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
@@ -39,7 +51,7 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 
 /* === 6. الهيدر والشريط العلوي === */
 .sticky-header { position: sticky; top: 0; z-index: 100; background: var(--primary); padding: 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: var(--shadow); }
-.top-nav { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+.top-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
 
 /* === 7. البحث === */
 .search-container { background: var(--white); border-radius: 15px; padding: 5px 15px; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
@@ -73,7 +85,7 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 /* === 10. شبكة المنتجات === */
 .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
 .product-card { background: linear-gradient(to bottom, var(--white) 60%, #ffeaf1 100%); border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; height: 100%; perspective: 1000px; }
-.img-wrapper { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 4px; }
+.img-wrapper { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 4px; cursor: pointer; }
 .img-wrapper::before { content: ""; position: absolute; width: 150%; height: 150%; background: conic-gradient(yellow, blue, red, yellow); animation: rotateBorder 3s linear infinite; z-index: 0; }
 .img-wrapper::after { content: ""; position: absolute; inset: 4px; background: var(--white); border-radius: calc(var(--radius) - 4px) calc(var(--radius) - 4px) 0 0; z-index: 1; }
 .prod-img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; border-radius: calc(var(--radius) - 4px) calc(var(--radius) - 4px) 0 0; }
@@ -101,6 +113,52 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 .detail-content { padding: 20px; background: var(--white); border-top-left-radius: 30px; border-top-right-radius: 30px; margin-top: -20px; position: relative; min-height: 300px; padding-bottom: 80px; }
 .detail-price { color: var(--primary); font-size: 20px; font-weight: bold; margin-top: 5px; }
 .detail-desc { margin-top: 20px; line-height: 1.6; color: #666; font-size: 14px; white-space: pre-line; }
+
+/* === تنسيق الأزرار الديناميكية للتفاصيل === */
+.dynamic-link-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(45deg, #11998e, #38ef7d);
+    color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.dynamic-link-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: all 0.5s ease;
+}
+.dynamic-link-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6); }
+.dynamic-link-btn:hover::after { left: 100%; }
+
+/* === تنسيق نافذة الإطار المدمج (Iframe) === */
+.iframe-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--light); z-index: 10000; display: none; flex-direction: column;
+}
+.iframe-header {
+    background: var(--primary); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+}
+.iframe-header button {
+    background: var(--white); border: none; color: var(--text); padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+#internal-iframe {
+    width: 100%; flex-grow: 1; border: none; background: #fff;
+}
 
 /* === 13. الإشعارات (Toast) === */
 #toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 12px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 2000; }
