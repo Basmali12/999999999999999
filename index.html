@@ -26,8 +26,9 @@
         <header class="sticky-header">
             <div class="top-nav">
                 <div class="logo animated-store-name" id="store-name-display">فن التكلوجيا الحديث</div>
+                <a href="https://wa.me/9647729373260" class="wa-header-icon" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
-            <div class="search-container"><div class="search-box"><input type="text" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
+            <div class="search-container"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
         </header>
         <div class="main-content">
             <div class="slider-container"><div class="slider-wrapper" id="dynamic-slider"></div><div class="promo-text">عروض مميزة</div></div>
@@ -49,6 +50,14 @@
                 <div class="detail-desc"><p></p></div>
             </div>
         </div>
+    </div>
+
+    <div id="iframe-modal" class="iframe-modal">
+        <div class="iframe-header">
+            <span style="color: white; font-weight: bold; font-size: 14px;">تصفح الرابط</span>
+            <button onclick="closeIframe()"><i class="fa-solid fa-xmark"></i> إغلاق</button>
+        </div>
+        <iframe id="internal-iframe" src="" frameborder="0"></iframe>
     </div>
 
     <script src="config.js"></script>
