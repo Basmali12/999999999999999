@@ -3,53 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فن التكنولوجيا الحديث</title>
+    <title>متجر التطبيق</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- مكاتب Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
-
-    <!-- القائمة العلوية للتنقل (التبويبات) -->
-    <nav class="bottom-nav">
-        <button class="tab-btn active" onclick="openTab('storeTab', this)">المتجر</button>
-        <button class="tab-btn" onclick="openTab('aboutTab', this)">من نحن</button>
-        <button class="tab-btn" onclick="openTab('privacyTab', this)">سياسة الخصوصية</button>
-        <button class="tab-btn" onclick="openTab('termsTab', this)">حقوق الطبع</button>
+    <nav class="nav-bar">
+        <button class="tab-btn active" onclick="switchTab('store')">المتجر</button>
+        <button class="tab-btn" onclick="switchTab('about')">من نحن</button>
+        <button class="tab-btn" onclick="switchTab('privacy')">الخصوصية</button>
+        <button class="tab-btn" onclick="switchTab('terms')">الحقوق</button>
     </nav>
 
-    <!-- قسم المتجر -->
-    <section id="storeTab" class="tab-content active">
-        <div class="grid-container" id="productsGrid">
-            <!-- ستظهر المنتجات هنا -->
-        </div>
-    </section>
+    <div id="store" class="tab-content active">
+        <div id="productsGrid" class="grid"></div>
+    </div>
 
-    <!-- قسم من نحن -->
-    <section id="aboutTab" class="tab-content">
-        <div class="info-box">
-            <h2>من نحن</h2>
-            <p>نحن مؤسسة رائدة في تقديم الحلول البرمجية والمشاريع التقنية. نسعى دائماً لتوفير أحدث التقنيات وأفضل المنتجات الرقمية لدعم أعمالكم.</p>
-        </div>
-    </section>
+    <div id="about" class="tab-content">
+        <h2>من نحن</h2>
+        <p>نحن منصة تكنولوجية حديثة لتقديم أفضل الخدمات البرمجية والتطبيقات.</p>
+    </div>
 
-    <!-- قسم سياسة الخصوصية -->
-    <section id="privacyTab" class="tab-content">
-        <div class="info-box">
-            <h2>سياسة الخصوصية</h2>
-            <p>نحن نلتزم بحماية بياناتك الشخصية. التطبيق لا يجمع معلومات حساسة، ونضمن لك تجربة استخدام آمنة وموثوقة تتوافق مع معايير الأمان العالمية.</p>
-        </div>
-    </section>
+    <div id="privacy" class="tab-content">
+        <h2>سياسة الخصوصية</h2>
+        <p>نحن نحترم خصوصيتك ولا نجمع بيانات شخصية بدون إذنك.</p>
+    </div>
 
-    <!-- قسم حقوق الطبع -->
-    <section id="termsTab" class="tab-content">
-        <div class="info-box">
-            <h2>حقوق الطبع والنشر</h2>
-            <p>جميع الحقوق محفوظة. يمنع اقتباس أو نسخ أي محتوى برمجي أو مرئي من هذا التطبيق دون الحصول على إذن خطي مسبق.</p>
-        </div>
-    </section>
+    <div id="terms" class="tab-content">
+        <h2>حقوق الطبع والنشر</h2>
+        <p>جميع الحقوق محفوظة. يمنع نسخ أي محتوى من هذا التطبيق.</p>
+    </div>
 
     <script src="config.js"></script>
     <script src="script.js"></script>
