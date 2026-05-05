@@ -2,68 +2,56 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>متجرنا</title>
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-    <meta name="theme-color" content="#ff9900">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فن التكنولوجيا الحديث</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- مكاتب Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
-    <div id="install-banner" class="install-banner">
-        <div style="display:flex; gap:10px; align-items:center;">
-            <i class="fa-brands fa-android"></i> <span>تثبيت التطبيق</span>
-        </div>
-        <button id="install-btn">تثبيت</button>
-        <button id="close-install"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div id="splash-screen"><div class="splash-content"><h1 id="splash-title">فن التكلوجيا الحديث</h1><div class="loader"></div></div></div>
-    <div id="toast-notification">تمت العملية بنجاح!</div>
 
-    <div id="home-page" class="page active-page">
-        <header class="sticky-header">
-            <div class="top-nav">
-                <div class="logo animated-store-name" id="store-name-display">فن التكلوجيا الحديث</div>
-                <a href="https://wa.me/9647729373260" class="wa-header-icon" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-            </div>
-            <div class="search-container"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
-        </header>
-        <div class="main-content">
-            <div class="slider-container"><div class="slider-wrapper" id="dynamic-slider"></div><div class="promo-text">عروض مميزة</div></div>
-            <h3 class="section-title">تصفح الفئات</h3>
-            <div class="categories-scroll" id="dynamic-categories"><div class="category-item" onclick="filterProducts('all')"><div class="cat-box active"><div class="square-icon"></div></div><span class="cat-name">الكل</span></div></div>
-            <div class="section-title"><span>أحدث المنتجات</span></div>
-            <div class="products-grid" id="products-container"><div style="text-align:center; width:200%; padding:20px; color:#777;">جاري التحميل...</div></div>
-        </div>
-        <nav class="bottom-nav"><div class="nav-item active" onclick="showPage('home-page')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div></nav>
-    </div>
+    <!-- القائمة العلوية للتنقل (التبويبات) -->
+    <nav class="bottom-nav">
+        <button class="tab-btn active" onclick="openTab('storeTab', this)">المتجر</button>
+        <button class="tab-btn" onclick="openTab('aboutTab', this)">من نحن</button>
+        <button class="tab-btn" onclick="openTab('privacyTab', this)">سياسة الخصوصية</button>
+        <button class="tab-btn" onclick="openTab('termsTab', this)">حقوق الطبع</button>
+    </nav>
 
-    <div id="product-page" class="page">
-        <div class="product-header"><button class="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></button><span class="header-title">تفاصيل المنتج</span></div>
-        <div class="product-view-scroll">
-            <div class="large-image-container"><img id="detail-img" src=""></div>
-            <div class="detail-content">
-                <div id="detail-dynamic-buttons" style="margin-bottom: 20px;"></div>
-                <h2 id="detail-title"></h2>
-                <div class="detail-desc"><p></p></div>
-            </div>
+    <!-- قسم المتجر -->
+    <section id="storeTab" class="tab-content active">
+        <div class="grid-container" id="productsGrid">
+            <!-- ستظهر المنتجات هنا -->
         </div>
-    </div>
+    </section>
 
-    <div id="iframe-modal" class="iframe-modal">
-        <div class="iframe-header">
-            <span style="color: white; font-weight: bold; font-size: 14px;">تصفح الرابط</span>
-            <button onclick="closeIframe()"><i class="fa-solid fa-xmark"></i> إغلاق</button>
+    <!-- قسم من نحن -->
+    <section id="aboutTab" class="tab-content">
+        <div class="info-box">
+            <h2>من نحن</h2>
+            <p>نحن مؤسسة رائدة في تقديم الحلول البرمجية والمشاريع التقنية. نسعى دائماً لتوفير أحدث التقنيات وأفضل المنتجات الرقمية لدعم أعمالكم.</p>
         </div>
-        <iframe id="internal-iframe" src="" frameborder="0"></iframe>
-    </div>
+    </section>
+
+    <!-- قسم سياسة الخصوصية -->
+    <section id="privacyTab" class="tab-content">
+        <div class="info-box">
+            <h2>سياسة الخصوصية</h2>
+            <p>نحن نلتزم بحماية بياناتك الشخصية. التطبيق لا يجمع معلومات حساسة، ونضمن لك تجربة استخدام آمنة وموثوقة تتوافق مع معايير الأمان العالمية.</p>
+        </div>
+    </section>
+
+    <!-- قسم حقوق الطبع -->
+    <section id="termsTab" class="tab-content">
+        <div class="info-box">
+            <h2>حقوق الطبع والنشر</h2>
+            <p>جميع الحقوق محفوظة. يمنع اقتباس أو نسخ أي محتوى برمجي أو مرئي من هذا التطبيق دون الحصول على إذن خطي مسبق.</p>
+        </div>
+    </section>
 
     <script src="config.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
