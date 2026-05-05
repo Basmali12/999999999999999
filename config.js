@@ -1,15 +1,14 @@
-// config.js
-window.MY_STORE_CONFIG = {
-  firebase: {
-    apiKey: "AIzaSyAEX8BjlYjsHOxDwD-Wu9qyFyIR3Wb6RxQ",
-    authDomain: "mtgr-24718.firebaseapp.com",
-    databaseURL: "https://mtgr-24718-default-rtdb.firebaseio.com",
-    projectId: "mtgr-24718",
-    storageBucket: "mtgr-24718.firebasestorage.app",
-    messagingSenderId: "385919783070",
-    appId: "1:385919783070:web:64f2703ec8cc0fd1c5ab8f"
+const CONFIG = {
+  FIREBASE_CONFIG: {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
   },
-  security: {
-    adminCode: "1001"
-  }
+  COLLECTION_NAME: "products"
 };
+
+firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+const db = firebase.firestore();
