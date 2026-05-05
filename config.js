@@ -9,6 +9,5 @@ const CONFIG = {
   },
   COLLECTION_NAME: "products"
 };
-
 firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
 const db = firebase.firestore();
